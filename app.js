@@ -1,19 +1,28 @@
 var mongoose = require('mongoose')
 var express = require('express');
+var app = express()
 var path = require('path')
 var bodyParser = require('body-parser');
-mongoose.connect('mongodb://localhost/ecommerce-node')
+
 
 var Product = require('./models/product')
 var User = require('./models/user')
 var Order = require('./models/order')
 
-// setup modular routing for the animals resource
-var orderRoutes = require ('./controllers/order');
-app.use('/order', orderRoutes);
 
-app.use(express.static(__dirname + '/public'));
-app.listen(3000)
+
+// setup modular routing for the animals resource
+// var productRoutes = require ('./controllers/product');
+// app.use('/products', productRoutes);
+
+var usersRoutes = require ('./controllers/user');
+app.use('/users', usersRoutes);
+
+// root renders index
+app.get('/', function(req, res){
+  res.render('index')
+})
+
 
 var firstUser = new User({
   name: 'Luke Haines',
@@ -61,4 +70,9 @@ firstOrder.save(function(err, order) {
 })
 
 firstOrder.products.push(firstProduct)
- 
+
+// app.listen(process.env.PORT || 9000)
+
+app.listen(3000, function() {
+  console.log('listening on port 3000')
+}) 
